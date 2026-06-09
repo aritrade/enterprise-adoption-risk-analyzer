@@ -13,6 +13,7 @@ import logging
 import os
 import time
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException, Query, Request
@@ -53,14 +54,20 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
+# Anchor static/template dirs to this file so the app works regardless of the
+# process working directory (local `cd` vs. platform start command).
+_BASE_DIR = Path(__file__).resolve().parent
+_STATIC_DIR = _BASE_DIR / "static"
+_TEMPLATES_DIR = _BASE_DIR / "templates"
+
+app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
+templates = Jinja2Templates(directory=str(_TEMPLATES_DIR))
 def _make_cache_bust() -> str:
     """Hash of key static assets so browsers re-fetch after any edit."""
     h = hashlib.md5()
-    for rel in ("app/static/js/app.js", "app/static/css/style.css"):
+    for rel in ("js/app.js", "css/style.css"):
         try:
-            h.update(str(os.path.getmtime(rel)).encode())
+            h.update(str(os.path.getmtime(_STATIC_DIR / rel)).encode())
         except OSError:
             h.update(rel.encode())
     return h.hexdigest()[:10]
@@ -73,7 +80,16 @@ templates.env.globals["cache_bust"] = _CACHE_BUST
 
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
+    try:
+        return templates.TemplateResponse(request, "dashboard.html")
+    except Exception as exc:  # TEMP diagnostic — surface render errors
+        import traceback
+        logger.exception("dashboard render failed")
+        return HTMLResponse(
+            f"<pre>dashboard render error:\n{type(exc).__name__}: {exc}\n\n"
+            f"{traceback.format_exc()}</pre>",
+            status_code=500,
+        )
 
 
 # ── API: Account analysis ────────────────────────────────────────────────
@@ -654,7 +670,7 @@ async def sync_one_account(
 
 @app.get("/sync", response_class=HTMLResponse)
 async def sync_page(request: Request) -> Any:
-    return templates.TemplateResponse("sync.html", {"request": request})
+    return templates.TemplateResponse(request, "sync.html")
 
 
 # ── API: Cache management ────────────────────────────────────────────────
