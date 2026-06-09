@@ -1,3 +1,0 @@
-# Exclude all files from GitHub Linguist language detection so no language
-# badge / breakdown is shown on the profile pin or repo page.
-* linguist-detectable=false
