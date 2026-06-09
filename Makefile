@@ -10,7 +10,7 @@ run: ## Run the demo locally on :8000.
 	./.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 docker-build: ## Build the demo image.
-	docker build -t adoption-risk-analyzer-demo .
+	docker build -t enterprise-adoption-risk-analyzer .
 
 docker-run: ## Run the demo image on :8000.
-	docker run --rm -p 8000:8000 adoption-risk-analyzer-demo
+	docker run --rm -p 8000:8000 enterprise-adoption-risk-analyzer

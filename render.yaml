@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: adoption-risk-analyzer-demo
+    name: enterprise-adoption-risk-analyzer
     runtime: python
     plan: free
     autoDeploy: true
