@@ -55,6 +55,7 @@ Claude action plan → explainable factors → auto-drafted outreach.
 - [API reference](#api-reference)
 - [Demo data](#demo-data)
 - [Demo vs. production](#demo-vs-production)
+- [Project phases](#project-phases)
 - [Tech stack](#tech-stack)
 - [License & disclaimer](#license--disclaimer)
 
@@ -360,6 +361,25 @@ stable (and cacheable).
 | Heavy deps | Not installed | Browser automation, CRM SDK, embeddings |
 | Secrets | None | Managed credentials |
 | Purpose | Public portfolio piece | Internal operational tool |
+
+## Project phases
+
+How this came together. (The public build is the sanitized, synthetic-data
+version of the tool — see [Demo vs. production](#demo-vs-production).)
+
+- **Phase 1 — Foundations.** FastAPI app scaffold, configuration, SQLite persistence, and a TTL cache.
+- **Phase 2 — Connector layer.** Pluggable connectors across five source categories — support, infrastructure/monitoring, customer success, renewals, and internal engagement.
+- **Phase 3 — Risk engine.** Weighted scoring of ~15 signals into a single explainable 0–100 escalation-risk score with severity bucketing.
+- **Phase 4 — Explainability.** Factor-level breakdown by source, score-by-source donut + weighted-factor charts, and transparent, tunable weights.
+- **Phase 5 — Aggregator & portfolio views.** Account index, Top-Risks leaderboard, region filters (APJ/EMEA/AMER), and a per-CXM book of business.
+- **Phase 6 — Manual CXM risk flags.** Full CRUD for human-added risk flags layered on top of the model's output.
+- **Phase 7 — Outreach.** Email-draft generator that turns flagged problems and recommendations into a ready-to-send customer email.
+- **Phase 8 — Claude advisory layer.** Server-side Anthropic integration (key never in the browser), invoked on explicit click and cached per account, with a zero-cost deterministic fallback.
+- **Phase 9 — Semantic search.** Optional vector store for similar-account lookup and free-text search, degrading gracefully when absent.
+- **Phase 10 — Background ingestion.** APScheduler-driven recompute and a `/sync` freshness/monitor page mirroring the production ingest model.
+- **Phase 11 — Sanitization for public release.** Synthetic-data generators, a hard secret sweep, guarded imports, a demo banner, and honest disclaimers — no proprietary code, credentials, or customer data.
+- **Phase 12 — Deploy & uptime.** Dockerfile, Render blueprint, a GitHub Actions keep-alive, and a cold-start "waking up" overlay.
+- **Phase 13 — Docs & story.** Comprehensive README, screenshots + a walkthrough GIF, an interactive pitch deck, and a narrated explainer video.
 
 ## Tech stack
 
