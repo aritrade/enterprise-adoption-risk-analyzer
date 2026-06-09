@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root { --bg:#0b1220; --bg2:#0f1a2e; --line:#243352; --text:#e8edf2; --muted:#93a4bf; --blue:#3b9eff; --orange:#d97757; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html,body { width:1280px; height:720px; overflow:hidden;
+    font-family:"Inter",-apple-system,sans-serif; color:var(--text);
+    background: radial-gradient(1100px 650px at 82% -12%, rgba(59,158,255,0.14), transparent 60%),
+                radial-gradient(800px 560px at -6% 112%, rgba(217,119,87,0.13), transparent 55%),
+                linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%); }
+  .frame { width:1280px; height:720px; padding:48px 64px; display:flex; flex-direction:column; }
+
+  .cap { display:flex; flex-direction:column; gap:8px; }
+  .eye { font-size:16px; font-weight:800; letter-spacing:0.24em; text-transform:uppercase; color:var(--blue); }
+  .eye.o { color:var(--orange); }
+  .title { font-size:38px; font-weight:800; line-height:1.12; letter-spacing:-0.01em; max-width:1130px; }
+  .bar { width:80px; height:6px; border-radius:5px; background:linear-gradient(90deg,var(--blue),var(--orange)); margin:14px 0 0; }
+
+  .shotwrap { flex:1; display:flex; align-items:center; justify-content:center; margin-top:26px; }
+  .window { border-radius:14px; overflow:hidden; border:1px solid var(--line); box-shadow:0 26px 70px rgba(0,0,0,0.5); background:#0e1626; max-width:1110px; }
+  .bar-top { height:34px; background:#0e1626; display:flex; align-items:center; gap:8px; padding:0 14px; border-bottom:1px solid var(--line); }
+  .bar-top i { width:11px; height:11px; border-radius:50%; display:inline-block; }
+  .bar-top .r{background:#ff5f57}.bar-top .y{background:#febc2e}.bar-top .g{background:#28c840}
+  .bar-top span { margin-left:10px; font-size:12.5px; color:var(--muted); }
+  .window img { display:block; width:100%; }
+
+  .foot { display:flex; justify-content:space-between; align-items:center; margin-top:20px; font-size:15px; color:var(--muted); }
+  .foot b { color:var(--text); }
+  .note { font-size:13.5px; color:var(--muted); }
+
+  /* centered card variant (title / outro) */
+  .center { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:18px; }
+  .center .big { font-size:58px; font-weight:900; line-height:1.05; letter-spacing:-0.02em; max-width:1050px; }
+  .center .sub { font-size:24px; color:var(--muted); font-weight:500; max-width:880px; line-height:1.5; }
+  .center .bar { margin:6px auto; }
+  .links { display:flex; flex-direction:column; gap:10px; font-size:21px; margin-top:6px; }
+  .links a,.links span.u { color:var(--blue); font-weight:600; }
+  .pill { display:inline-block; padding:6px 14px; border-radius:999px; font-size:15px; font-weight:600; background:rgba(217,119,87,0.13); color:var(--orange); border:1px solid rgba(217,119,87,0.35); }
+</style>
+</head>
+<body>
+<div class="frame" id="frame"></div>
+<script>
+  const SEG = [
+    { type:"title", big:"Enterprise Adoption &amp; Escalation Risk Analyzer",
+      sub:"One explainable 0–100 risk score per account — fused from five systems, and turned into a Claude-written action plan." },
+    { img:"01-dashboard.png", eye:"Portfolio", title:"Every account, scored 0–100 by escalation risk" },
+    { img:"02-top-risks.png", eye:"Prioritise", title:"A ranked, filterable book of business" },
+    { img:"03-account.png", eye:"Drill in", title:"Score gauge, key stats, and risk composition" },
+    { img:"04-ai-advisory.png", eyeO:true, eye:"AI Advisory", title:"One click → a Claude-written action plan",
+      note:"Server-side · cached · zero-cost deterministic fallback when no key" },
+    { img:"05-risk-factors.png", eye:"Explainability", title:"Score by source + every weighted factor — no black box" },
+    { img:"06-email.png", eye:"Outreach", title:"Auto-drafts the customer email, every problem flagged" },
+    { type:"outro", big:"Try it yourself.",
+      sub:"Runs entirely on synthetic data — open source, deployed, and kept warm.",
+      links:["enterprise-adoption-risk-analyzer.onrender.com","github.com/aritrade/enterprise-adoption-risk-analyzer"] },
+  ];
+  const i = parseInt(new URLSearchParams(location.search).get("i") || "0", 10);
+  const s = SEG[i] || SEG[0];
+  const F = document.getElementById("frame");
+
+  if (s.type === "title") {
+    F.innerHTML = `<div class="center">
+      <div class="eye">Applied AI · Customer Success</div>
+      <div class="big">${s.big}</div><div class="bar"></div>
+      <div class="sub">${s.sub}</div></div>
+      <div class="foot"><span><b>Aritra De</b></span><span class="note">a 60-second tour</span></div>`;
+  } else if (s.type === "outro") {
+    F.innerHTML = `<div class="center">
+      <div class="big">${s.big}</div><div class="bar"></div>
+      <div class="sub">${s.sub}</div>
+      <div class="links">${s.links.map(l=>`<span class="u">${l}</span>`).join("")}</div>
+      <div style="margin-top:10px"><span class="pill">synthetic data · no real customers</span></div></div>
+      <div class="foot"><span><b>Aritra De</b> · Enterprise Adoption &amp; Escalation Risk Analyzer</span><span></span></div>`;
+  } else {
+    F.innerHTML = `<div class="cap">
+        <div class="eye ${s.eyeO?'o':''}">${s.eye}</div>
+        <div class="title">${s.title}</div><div class="bar"></div>
+      </div>
+      <div class="shotwrap"><div class="window">
+        <div class="bar-top"><i class="r"></i><i class="y"></i><i class="g"></i><span>enterprise-adoption-risk-analyzer</span></div>
+        <img src="${s.img}" alt="" />
+      </div></div>
+      <div class="foot"><span><b>Aritra De</b> · live demo + open source</span><span class="note">${s.note||""}</span></div>`;
+  }
+  document.title = "ready-" + i;
+</script>
+</body>
+</html>

@@ -43,6 +43,7 @@ Claude action plan → explainable factors → auto-drafted outreach.
 
 - [Why I built this](#why-i-built-this)
 - [What it does](#what-it-does)
+- [Pitch deck & explainer](#pitch-deck--explainer)
 - [Screenshots](#screenshots)
 - [The Claude advisory layer](#the-claude-advisory-layer)
 - [How the risk score works](#how-the-risk-score-works)
@@ -97,6 +98,23 @@ being available.
 - **Background ingestion model** — an APScheduler loop and a `/sync` monitor page
   mirror how the production version continuously refreshes signals.
 - **CSV export** of the full scored portfolio.
+
+## Pitch deck & explainer
+
+**Explainer video** — a ~40-second tour of the whole flow with on-screen captions:
+
+[![Watch the explainer](docs/explainer-preview.gif)](docs/explainer.mp4)
+
+> The GIF above loops the opening scenes. **[▶ Watch the full explainer (MP4)](docs/explainer.mp4)** — GitHub opens an inline player on the file page. *(To embed a player directly in this README, drag `docs/explainer.mp4` into the GitHub README editor and it'll auto-upload.)*
+
+**Pitch deck** — **[▶ open the interactive deck](https://aritra-de.vercel.app/risk-analyzer-pitch?present=1)** (arrow keys to navigate) · **[download the PDF](docs/pitch-deck.pdf)**
+
+| | | |
+|:-:|:-:|:-:|
+| ![](docs/pitch/slide-01.png) | ![](docs/pitch/slide-03.png) | ![](docs/pitch/slide-06.png) |
+| _The pitch_ | _The solution_ | _The Claude layer_ |
+| ![](docs/pitch/slide-05.png) | ![](docs/pitch/slide-07.png) | ![](docs/pitch/slide-10.png) |
+| _Explainability_ | _Architecture_ | _About_ |
 
 ## Screenshots
 

@@ -25,6 +25,8 @@ chromadb/
 # Media / generated artifacts (never publish — may contain real screen captures)
 *.mp4
 *.mov
+# Exception: the synthetic-data explainer is safe to publish
+!docs/explainer.mp4
 _video_frames/
 _frames/
 
