@@ -80,16 +80,7 @@ templates.env.globals["cache_bust"] = _CACHE_BUST
 
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
-    try:
-        return templates.TemplateResponse(request, "dashboard.html")
-    except Exception as exc:  # TEMP diagnostic — surface render errors
-        import traceback
-        logger.exception("dashboard render failed")
-        return HTMLResponse(
-            f"<pre>dashboard render error:\n{type(exc).__name__}: {exc}\n\n"
-            f"{traceback.format_exc()}</pre>",
-            status_code=500,
-        )
+    return templates.TemplateResponse(request, "dashboard.html")
 
 
 # ── API: Account analysis ────────────────────────────────────────────────
