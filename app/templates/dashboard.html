@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adoption & Escalation Risk Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v={{ cache_bust }}">
+</head>
+<body>
+
+    <!-- Demo disclaimer banner (synthetic data only) -->
+    <div id="demo-banner" style="position:sticky;top:0;z-index:1000;background:linear-gradient(90deg,#1e3a8a,#312e81);color:#e0e7ff;font-size:0.78rem;line-height:1.4;padding:6px 16px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.12)">
+        <strong>Demo</strong> &mdash; runs entirely on <strong>synthetic data</strong>. Personal portfolio project; not affiliated with or endorsed by any employer. No live systems, credentials, or real customer data.
+    </div>
+
+    <!-- ═══════════ PAGE 1: DASHBOARD ═══════════ -->
+    <div id="dashboard-view" class="page-view active">
+        <div class="app-container">
+
+            <!-- Header -->
+            <header>
+                <div>
+                    <h1>Adoption & Escalation Risk Analyzer</h1>
+                    <p class="subtitle">Unified risk scoring &mdash; Salesforce &middot; Nutanix Insights &middot; CS Insights &middot; Planhat &middot; Glean</p>
+                </div>
+                <div class="header-actions">
+                    <div class="search-container">
+                        <span class="search-icon">&#128269;</span>
+                        <input type="text" id="search-input" placeholder="Search accounts&hellip;" autocomplete="off">
+                    </div>
+                    <button class="btn btn-secondary" id="btn-my-accounts" title="Show accounts assigned to me">My Accounts</button>
+                    <button class="btn btn-secondary" onclick="exportCSV()" title="Download current view as CSV">Export CSV</button>
+                    <button class="btn btn-secondary" onclick="refreshView()">&#x21bb; Refresh</button>
+                </div>
+            </header>
+
+            <!-- Data-source connectivity indicators -->
+            <div class="source-pills">
+                <span class="source-pill" data-source="salesforce"><span class="dot active"></span>Salesforce</span>
+                <span class="source-pill" data-source="insights"><span class="dot active"></span>Nutanix Insights</span>
+                <span class="source-pill" data-source="csinsights"><span class="dot active"></span>CS Insights</span>
+                <span class="source-pill" data-source="planhat"><span class="dot active"></span>Planhat</span>
+                <span class="source-pill" data-source="glean"><span class="dot active"></span>Glean</span>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="label">Total Accounts</div>
+                    <div class="value" id="stat-total">&mdash;</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Showing</div>
+                    <div class="value" id="stat-showing">&mdash;</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">View Mode</div>
+                    <div class="value" id="stat-mode" style="font-size:0.95rem">Directory</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Index Status</div>
+                    <div class="value" id="stat-index" style="font-size:0.95rem;color:var(--text-muted)">Loading&hellip;</div>
+                </div>
+            </div>
+
+            <!-- Portfolio risk composition (where the high-risk volume comes from) -->
+            <div id="portfolio-risk-panel" class="portfolio-risk-panel">
+                <div class="portfolio-risk-header">
+                    <h3>Where the Portfolio Risk Lives</h3>
+                    <div class="portfolio-risk-controls">
+                        <select id="portfolio-risk-level" onchange="loadPortfolioRisk()">
+                            <option value="high">High-risk accounts</option>
+                            <option value="medium">Medium &amp; above</option>
+                            <option value="all">All accounts</option>
+                        </select>
+                        <a href="/sync" class="btn btn-secondary btn-sm" title="Background sync observability">Sync status</a>
+                    </div>
+                </div>
+                <div id="portfolio-risk-banner" class="portfolio-risk-banner hidden" role="status" aria-live="polite">
+                    <div class="prb-state"></div>
+                    <div class="prb-reason"></div>
+                </div>
+                <div class="portfolio-risk-body">
+                    <div class="portfolio-risk-chart-wrap">
+                        <canvas id="portfolio-risk-chart"></canvas>
+                    </div>
+                    <div class="portfolio-risk-side" id="portfolio-risk-side">
+                        <div class="loading-spinner"><div class="spinner"></div>Loading risk breakdown&hellip;</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View mode tabs -->
+            <div class="tab-bar">
+                <button class="tab active" data-view="directory" onclick="switchView('directory')">All Accounts</button>
+                <button class="tab" data-view="top-risks" onclick="switchView('top-risks')">Top Risks</button>
+                <button class="tab" data-view="cxm-portfolio" onclick="switchView('cxm-portfolio')">CXM Portfolio</button>
+            </div>
+
+            <!-- Region quick-filter (applies to whichever view is active) -->
+            <div class="region-filter" id="region-filter" role="group" aria-label="Region filter">
+                <span class="region-filter-label">Region:</span>
+                <button class="region-chip active" data-region="all"   onclick="setRegion('all')">All <span class="region-count" data-region-count="all"></span></button>
+                <button class="region-chip"        data-region="APJ"   onclick="setRegion('APJ')">APJ <span class="region-count" data-region-count="APJ"></span></button>
+                <button class="region-chip"        data-region="EMEA"  onclick="setRegion('EMEA')">EMEA <span class="region-count" data-region-count="EMEA"></span></button>
+                <button class="region-chip"        data-region="AMER"  onclick="setRegion('AMER')">AMER <span class="region-count" data-region-count="AMER"></span></button>
+                <button class="region-chip"        data-region="Unknown" onclick="setRegion('Unknown')">Unknown <span class="region-count" data-region-count="Unknown"></span></button>
+            </div>
+
+            <!-- Risk sub-tabs (visible only in top-risks mode) -->
+            <div class="tab-bar" id="risk-tabs" style="display:none;margin-top:-8px">
+                <button class="tab active" data-level="all">All</button>
+                <button class="tab" data-level="critical">Critical</button>
+                <button class="tab" data-level="high">High</button>
+                <button class="tab" data-level="medium">Medium</button>
+                <button class="tab" data-level="low">Low</button>
+            </div>
+
+            <!-- Directory table (default) -->
+            <div class="table-container" id="directory-table-container">
+                <table class="risk-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="name" onclick="sortDirectory('name')">Account <span class="sort-arrow" id="sort-name"></span></th>
+                            <th>Industry</th>
+                            <th>Type</th>
+                            <th>Region</th>
+                            <th>Owner</th>
+                            <th>CXM</th>
+                        </tr>
+                    </thead>
+                    <tbody id="directory-tbody">
+                        <tr><td colspan="6">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>Loading account index&hellip;
+                            </div>
+                        </td></tr>
+                    </tbody>
+                </table>
+                <div class="pagination-bar" id="pagination-bar" style="display:none">
+                    <button class="btn btn-secondary btn-sm" id="btn-prev" onclick="prevPage()" disabled>&#9664; Prev</button>
+                    <span class="pagination-info" id="pagination-info"></span>
+                    <button class="btn btn-secondary btn-sm" id="btn-next" onclick="nextPage()">Next &#9654;</button>
+                </div>
+            </div>
+
+            <!-- CXM Portfolio (hidden by default) -->
+            <div id="cxm-portfolio-container" style="display:none">
+                <!-- Master: roster grid -->
+                <div id="cxm-roster-view">
+                    <div class="cxm-search-bar">
+                        <span class="search-icon">&#128269;</span>
+                        <input type="text" id="cxm-search-input" placeholder="Search CXMs by name&hellip;" autocomplete="off">
+                    </div>
+                    <div class="cxm-roster-grid" id="cxm-roster-grid">
+                        <div class="loading-spinner"><div class="spinner"></div>Loading CXM roster&hellip;</div>
+                    </div>
+                </div>
+                <!-- Detail: drill-down into one CXM -->
+                <div id="cxm-detail-container" style="display:none">
+                    <div class="cxm-detail-header" id="cxm-detail-header"></div>
+                    <div class="table-container">
+                        <table class="risk-table">
+                            <thead>
+                                <tr>
+                                    <th>Account</th>
+                                    <th>Industry</th>
+                                    <th>Type</th>
+                                    <th>Region</th>
+                                    <th>Owner</th>
+                                    <th>Program</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cxm-detail-tbody">
+                                <tr><td colspan="6"><div class="loading-spinner"><div class="spinner"></div>Loading&hellip;</div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analyzed risk table (hidden by default) -->
+            <div class="table-container" id="risk-table-container" style="display:none">
+                <table class="risk-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="account_name" class="sortable">Account <span class="sort-arrow"></span></th>
+                            <th data-sort="overall_score" class="sortable sorted desc">Risk Score <span class="sort-arrow">&#9660;</span></th>
+                            <th data-sort="risk_level" class="sortable">Level <span class="sort-arrow"></span></th>
+                            <th data-sort="open_cases" class="sortable">Open Cases <span class="sort-arrow"></span></th>
+                            <th data-sort="escalated_cases" class="sortable">Escalations <span class="sort-arrow"></span></th>
+                            <th data-sort="critical_alerts" class="sortable">Alerts <span class="sort-arrow"></span></th>
+                            <th data-sort="cs_health" class="sortable">CS Health <span class="sort-arrow"></span></th>
+                            <th>Owner / SE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accounts-tbody">
+                        <tr><td colspan="8">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>Analysing top risk accounts&hellip;
+                            </div>
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ PAGE 2: ACCOUNT VIEW (full-screen tile grid) ═══════════ -->
+    <div id="account-view" class="page-view">
+        <div class="account-page-container">
+            <div class="account-header" id="account-header"></div>
+            <div class="account-stats-row" id="account-stats-row"></div>
+            <div id="risk-composition-panel" class="risk-composition-panel" style="display:none">
+                <div class="risk-composition-header">
+                    <h3>Risk Composition</h3>
+                    <span class="risk-composition-meta" id="risk-composition-meta"></span>
+                </div>
+                <div class="risk-composition-body">
+                    <div class="risk-composition-chart-wrap">
+                        <canvas id="risk-composition-chart"></canvas>
+                    </div>
+                    <div class="risk-composition-legend" id="risk-composition-legend"></div>
+                </div>
+            </div>
+            <div class="section-tile-grid" id="section-tile-grid"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════ PAGE 3: SECTION DRILL-DOWN (full-screen charts) ═══════════ -->
+    <div id="section-view" class="page-view">
+        <div class="section-page-container">
+            <div class="section-header" id="section-header"></div>
+            <div class="section-content" id="section-content"></div>
+        </div>
+    </div>
+
+    <!-- My-Accounts modal -->
+    <div class="modal-overlay" id="my-accounts-overlay" style="display:none">
+        <div class="modal">
+            <h3>My Accounts</h3>
+            <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:16px">Enter your username (demo: try <code>aria.menon</code>) to see accounts you own or SE.</p>
+            <input type="text" id="my-accounts-username" placeholder="Username (e.g. aria.menon)" style="width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:0.9rem;margin-bottom:12px">
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn btn-secondary btn-sm" onclick="closeMyAccountsModal()">Cancel</button>
+                <button class="btn btn-primary btn-sm" onclick="submitMyAccounts()">Load My Accounts</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script src="/static/js/app.js?v={{ cache_bust }}"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+
+# Runtime data & state (re-seeded on boot in demo mode)
+data/
+*.db
+*.sqlite
+*.sqlite3
+.browser_state/
+chromadb/
+
+# Media / generated artifacts (never publish — may contain real screen captures)
+*.mp4
+*.mov
+_video_frames/
+_frames/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
