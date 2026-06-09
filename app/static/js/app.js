@@ -157,7 +157,16 @@ document.addEventListener("DOMContentLoaded", () => {
     loadPortfolioRisk();
     loadRegionCounts();
     setInterval(() => { loadStatus(); loadPortfolioRisk(); }, 60000);
+    // Safety net: never let the cold-start overlay get stuck.
+    setTimeout(hideWakeOverlay, 12000);
 });
+
+function hideWakeOverlay() {
+    const el = document.getElementById("wake-overlay");
+    if (!el || el.classList.contains("hide")) return;
+    el.classList.add("hide");
+    setTimeout(() => el.remove(), 500);
+}
 
 // ── Region quick-filter ────────────────────────────────────────────────
 
@@ -511,6 +520,7 @@ function switchView(view) {
 // ── Directory table rendering ───────────────────────────────────────────
 
 function renderDirectoryTable(accounts, highlight) {
+    hideWakeOverlay();
     const tbody = document.getElementById("directory-tbody");
     if (!accounts || !accounts.length) {
         tbody.innerHTML = `<tr><td colspan="6">

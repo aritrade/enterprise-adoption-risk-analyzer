@@ -11,6 +11,15 @@
 </head>
 <body>
 
+    <!-- Cold-start hint: this free-tier instance sleeps when idle; the first
+         request wakes it (~30-60s). Shown instantly, dismissed once data loads. -->
+    <div id="wake-overlay" style="position:fixed;inset:0;z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#0b1220;color:#e8edf2;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;text-align:center;padding:24px;transition:opacity .45s ease">
+        <div style="width:46px;height:46px;border:3px solid rgba(255,255,255,0.14);border-top-color:#3b9eff;border-radius:50%;animation:wake-spin .9s linear infinite"></div>
+        <div style="font-size:1.1rem;font-weight:700">Waking up the demo&hellip; hold on for a few seconds please</div>
+        <div style="font-size:0.86rem;color:#8fa3b8;max-width:360px;line-height:1.55">This runs on a free-tier instance that goes to sleep when idle, so the first load takes a moment to spin up. It&rsquo;ll be ready shortly &mdash; thanks for your patience.</div>
+        <style>@keyframes wake-spin{to{transform:rotate(360deg)}}#wake-overlay.hide{opacity:0;pointer-events:none}</style>
+    </div>
+
     <!-- Demo disclaimer banner (synthetic data only) -->
     <div id="demo-banner" style="position:sticky;top:0;z-index:1000;background:linear-gradient(90deg,#1e3a8a,#312e81);color:#e0e7ff;font-size:0.78rem;line-height:1.4;padding:6px 16px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.12)">
         <strong>Demo</strong> &mdash; runs entirely on <strong>synthetic data</strong>. Personal portfolio project; not affiliated with or endorsed by any employer. No live systems, credentials, or real customer data.
