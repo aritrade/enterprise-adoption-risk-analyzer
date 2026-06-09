@@ -17,7 +17,7 @@ runs on 100% synthetic data, no login required.
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![framework](https://img.shields.io/badge/FastAPI-async-009688)
 ![ai](https://img.shields.io/badge/AI-Claude%20advisory-d97757)
-![license](https://img.shields.io/badge/license-MIT-lightgrey)
+![license](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
 
 > [!IMPORTANT]
 > **This is a personal portfolio demo.** It runs entirely on **synthetic,
@@ -368,7 +368,12 @@ Chart.js · vanilla JS · Anthropic Messages API (optional).
 
 ## License & disclaimer
 
-MIT — see [`LICENSE`](LICENSE).
+**© 2026 Aritra De. All rights reserved.** — see [`LICENSE`](LICENSE).
+
+This repository is published publicly for **portfolio review and evaluation
+only**. You're welcome to read and explore it, but copying, modifying,
+redistributing, selling, or using it (including to train ML/AI models) without
+the author's written permission is **not permitted**.
 
 This is an independent portfolio project built on synthetic data to demonstrate
 applied-AI and customer-success engineering. It is not affiliated with any
