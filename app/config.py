@@ -64,6 +64,14 @@ class Settings(BaseSettings):
     # Internal engagement (uses existing SF connection — no extra config)
     engagement_live: bool = True  # auto-enabled when SF is live
 
+    # Optional Claude advisory layer. When anthropic_api_key is set, the
+    # "AI Advisory" panel calls Claude (server-side only — the key never
+    # reaches the browser); otherwise it returns a deterministic advisory at
+    # zero cost. Claude is only invoked on an explicit click, and results are
+    # cached per account, so cost stays negligible.
+    anthropic_api_key: str = ""
+    claude_model: str = "claude-sonnet-4-20250514"
+
     # Application — this public build ships in demo mode (synthetic data only).
     demo_mode: bool = True
     refresh_interval_minutes: int = 30

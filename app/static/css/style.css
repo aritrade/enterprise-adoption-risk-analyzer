@@ -2132,3 +2132,6 @@ th.sortable.sorted .sort-arrow { opacity: 1; color: var(--accent); }
 .region-pill.region-EMEA    { background: rgba(155, 89, 255, 0.16); color: #b48bff; }
 .region-pill.region-AMER    { background: rgba(46, 213, 115, 0.16); color: #4ddc8a; }
 .region-pill.region-Unknown { background: var(--bg-hover);          color: var(--text-muted); }
+
+.advisory-list { margin: 6px 0; padding-left: 20px; }
+.advisory-list li { color: var(--text-primary); line-height: 1.7; margin: 7px 0; }

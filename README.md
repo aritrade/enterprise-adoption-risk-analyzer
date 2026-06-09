@@ -31,6 +31,11 @@ top problems and recommendations.
   flags.
 - **AI-assisted outreach** — auto-drafts a customer email summarising the
   flagged risks and recommended next steps, with copy / mailto delivery.
+- **AI Advisory (Claude)** — an account drill-down panel that turns the risk
+  profile into a prioritized action plan. Calls the Anthropic API server-side
+  when `ANTHROPIC_API_KEY` is set (the key never reaches the browser); falls
+  back to a deterministic advisory at zero cost otherwise. Claude is invoked
+  only on explicit click and cached per account.
 - **CSV export** of the scored portfolio.
 
 ## Run it locally

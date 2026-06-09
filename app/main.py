@@ -278,6 +278,32 @@ async def infrastructure_summary(account_id: str) -> dict[str, Any]:
 
 # ── API: Account Financials ───────────────────────────────────────────────
 
+_ADVISORY_CACHE: dict[str, dict[str, Any]] = {}
+
+
+@app.get("/api/account/{account_id}/ai-advisory")
+async def ai_advisory(
+    account_id: str,
+    account_name: str = Query("Unknown"),
+) -> dict[str, Any]:
+    """Claude-generated action plan for one account (deterministic fallback).
+
+    Cached per account so Claude is called at most once per account — cost
+    stays negligible. The API key is read server-side only.
+    """
+    if account_id in _ADVISORY_CACHE:
+        return _ADVISORY_CACHE[account_id]
+    try:
+        profile = await aggregator.analyze_account(account_id, account_name)
+        from app.engine.claude_advisor import generate_advisory
+        result = await generate_advisory(profile)
+        _ADVISORY_CACHE[account_id] = result
+        return result
+    except Exception as exc:
+        logger.exception("AI advisory failed for %s", account_id)
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
 @app.get("/api/account/{account_id}/financials")
 async def account_financials(account_id: str) -> dict[str, Any]:
     try:
