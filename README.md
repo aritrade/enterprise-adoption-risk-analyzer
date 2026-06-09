@@ -101,11 +101,11 @@ being available.
 
 ## Pitch deck & explainer
 
-**Explainer video** — a ~40-second tour of the whole flow with on-screen captions:
+**Explainer video** — a ~1-minute narrated walkthrough of the whole flow (warm AI voiceover + on-screen captions):
 
 [![Watch the explainer](docs/explainer-preview.gif)](docs/explainer.mp4)
 
-> The GIF above loops the opening scenes. **[▶ Watch the full explainer (MP4)](docs/explainer.mp4)** — GitHub opens an inline player on the file page. *(To embed a player directly in this README, drag `docs/explainer.mp4` into the GitHub README editor and it'll auto-upload.)*
+> The GIF above loops the opening scenes (no audio). **[▶ Watch the full narrated explainer (MP4)](docs/explainer.mp4)** — GitHub opens an inline player with sound on the file page. *(To embed a player directly in this README, drag `docs/explainer.mp4` into the GitHub README editor and it'll auto-upload.)*
 
 **Pitch deck** — **[▶ open the interactive deck](https://aritra-de.vercel.app/risk-analyzer-pitch?present=1)** (arrow keys to navigate) · **[download the PDF](docs/pitch-deck.pdf)**
 
