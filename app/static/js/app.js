@@ -1252,6 +1252,7 @@ function renderSectionView(section, data) {
     const headerEl = document.getElementById("section-header");
     const titles = {
         "risk-factors": "Risk Factors",
+        "ai-advisory": "AI Advisory",
         "incidents": "Incident Tickets",
         "infrastructure": "Nutanix Infrastructure",
         "license": "License & Adoption",

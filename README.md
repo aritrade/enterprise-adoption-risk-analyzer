@@ -27,12 +27,23 @@ runs on 100% synthetic data, no login required.
 > credentials, or customer data**, and connects to **no live systems**. Any
 > resemblance to a real organisation is coincidental.
 
+## Quick look
+
+A 15-second tour — portfolio risk → ranked leaderboard → account drill-down →
+Claude action plan → explainable factors → auto-drafted outreach.
+
+![Demo walkthrough](docs/demo.gif)
+
+> [▶ Try the live demo](https://enterprise-adoption-risk-analyzer.onrender.com) ·
+> see the [full screenshots](#screenshots) below.
+
 ---
 
 ## Contents
 
 - [Why I built this](#why-i-built-this)
 - [What it does](#what-it-does)
+- [Screenshots](#screenshots)
 - [The Claude advisory layer](#the-claude-advisory-layer)
 - [How the risk score works](#how-the-risk-score-works)
 - [Quickstart](#quickstart)
@@ -86,6 +97,14 @@ being available.
 - **Background ingestion model** — an APScheduler loop and a `/sync` monitor page
   mirror how the production version continuously refreshes signals.
 - **CSV export** of the full scored portfolio.
+
+## Screenshots
+
+| | |
+|---|---|
+| **Portfolio overview** — where the risk lives, at a glance ![dashboard](docs/01-dashboard.png) | **Top-Risks leaderboard** — ranked, filterable book of business ![top risks](docs/02-top-risks.png) |
+| **Account drill-down** — score gauge, stats, and risk composition ![account](docs/03-account.png) | **AI Advisory** — Claude-written action plan (deterministic fallback shown) ![ai advisory](docs/04-ai-advisory.png) |
+| **Risk Factors** — full explainability: score by source + every weighted factor ![risk factors](docs/05-risk-factors.png) | **Email & Outreach** — auto-drafted outreach with flagged problems ![email](docs/06-email.png) |
 
 ## The Claude advisory layer
 
