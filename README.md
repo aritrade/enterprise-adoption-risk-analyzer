@@ -381,6 +381,17 @@ version of the tool — see [Demo vs. production](#demo-vs-production).)
 - **Phase 12 — Deploy & uptime.** Dockerfile, Render blueprint, a GitHub Actions keep-alive, and a cold-start "waking up" overlay.
 - **Phase 13 — Docs & story.** Comprehensive README, screenshots + a walkthrough GIF, an interactive pitch deck, and a narrated explainer video.
 
+### Roadmap — what's next
+
+Directions I'd take it next (not promises — honest next steps):
+
+- **Live connector adapters.** Swap the synthetic generators for real Salesforce / monitoring / CS APIs behind the same interface, so demo and production share one code path.
+- **Eval harness for the Claude advisories.** A golden set of accounts with graded "good advisory" rubrics, plus groundedness/hallucination checks and regression runs on prompt or model changes.
+- **Risk-over-time.** Track each account's score history to surface trajectory (improving vs. deteriorating), not just a point-in-time snapshot.
+- **Configurable scoring.** Per-segment / per-region weight profiles and a "what-if" simulator to see how a change in any signal moves the score.
+- **Proactive alerting.** Slack / email digests when an account crosses a risk threshold or a P1 lands.
+- **Multi-tenant & RBAC.** Team-scoped portfolios and role-based access for CXM orgs.
+
 ## Tech stack
 
 Python 3.11+ · FastAPI · Uvicorn · Pydantic v2 · APScheduler · SQLite · Jinja2 ·
